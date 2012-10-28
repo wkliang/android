@@ -5,9 +5,35 @@
     android:layout_height="fill_parent"
     >
 <TextView  
+    android:id="@+id/helloTextView"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
     android:text="Hello World, helloAndroid"
     />
+<Button
+    android:id="@+id/buttonHello"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="Hello"
+/>
+
+<Button
+    android:id="@+id/buttonPhone"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="Phone"
+/>
+<Button
+    android:id="@+id/buttonWifi"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="Wifi"
+/>
+<Button
+    android:id="@+id/buttonIntent"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="Intent"
+/>
 </LinearLayout>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="helloAndroid" default="help">
+<project name="LunchList" default="help">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -67,19 +67,6 @@
             -pre-clean
     -->
     <import file="custom_rules.xml" optional="true" />
-
-    <!-- wkliang:20121026
-         http://stackoverflow.com/questions/7432449/android-ndk-build-with-ant-script
-    -->
-    <target name="-pre-build">
-	<exec executable="${ndk.dir}/ndk-build" failonerror="true"/>
-    </target>
-    <target name="clean" depends="android_rules.clean">
-	<exec executable="${ndk.dir}/ndk-build" failonerror="true">
-	    <arg value="clean"/>
-	</exec>
-    </target>
-    <!-- wkliang:20121026 -->
 
     <!-- Import the actual build file.
 
