@@ -29,6 +29,7 @@ import android.provider.Contacts.People;
 import android.provider.Contacts.Phones;
 import android.util.Log;
 
+/* wkliang:20121030
 import com.android.email.mail.Address;
 import com.android.email.mail.Flag;
 import com.android.email.mail.Message;
@@ -36,6 +37,7 @@ import com.android.email.mail.MessagingException;
 import com.android.email.mail.Message.RecipientType;
 import com.android.email.mail.internet.MimeMessage;
 import com.android.email.mail.internet.TextBody;
+*/
 
 public class CursorToMessage {
     

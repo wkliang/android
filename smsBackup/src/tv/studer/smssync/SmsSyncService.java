@@ -33,12 +33,14 @@ import android.os.Process;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
+/* wkliang:20121030
 import com.android.email.mail.Folder;
 import com.android.email.mail.Message;
 import com.android.email.mail.MessagingException;
 import com.android.email.mail.Folder.FolderType;
 import com.android.email.mail.Folder.OpenMode;
 import com.android.email.mail.store.ImapStore;
+*/
 
 public class SmsSyncService extends Service {
 
