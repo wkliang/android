@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">helloAndroid</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_email">Email</string>
+    <string name="menu_quit">Quit</string>
+
+    <string name="titlePrefs">hello Preference</string>
+    <string name="titleRecipient">Recipient</string>
+    <string name="titlePassword">Password</string>
+    <string name="titleSubject">Subject</string>
+
+    <string name="summaryRecipient">recipient of email</string>
+    <string name="summaryPassword">password not used</string>
+    <string name="summarySubject">email subject</string>
 </resources>

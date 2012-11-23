@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.net.Uri;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+
+import android.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
 import android.net.wifi.WifiInfo;
@@ -18,11 +22,17 @@ import android.net.wifi.WifiManager;
 
 public class helloAndroid extends Activity
 {
+    SharedPreferences prefs;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+	prefs = PreferenceManager.getDefaultSharedPreferences(this);
+	// prefs.registerOnSharedPreferenceChangeListener(this);
+
         setContentView(R.layout.main);
 
 	// TextView tv = new TextView(this);
@@ -71,6 +81,27 @@ public class helloAndroid extends Activity
 	});
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	// Inflate the menu; this adds item to the action bar if it is presents.
+	getMenuInflater().inflate(R.menu.main, menu);
+	return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.id_settings:
+	    startActivity(new Intent(this, helloPrefs.class));
+	    break;
+	case R.id.id_email:
+	    sendEmail();
+	    break;
+	case R.id.id_quit:
+	    finish(); // end application ?
+	    break;
+	} 
+	return true;
+    }
 
 // ref: http://stackoverflow.com/questions/2197741/how-to-send-email-from-my-android-application
 // following one is using low level protocol to email
@@ -78,9 +109,12 @@ public class helloAndroid extends Activity
     private void sendEmail() {
 	Intent i = new Intent(Intent.ACTION_SEND);
 	i.setType("message/rfc822");
-	i.putExtra(Intent.EXTRA_EMAIL, new String[] {"admin@google.com"});
-	i.putExtra(Intent.EXTRA_SUBJECT, "subject title");
-	i.putExtra(Intent.EXTRA_TEXT, "mail body");
+	i.putExtra(Intent.EXTRA_EMAIL,
+		new String[] {prefs.getString("emailRecipient","nobody")});
+	i.putExtra(Intent.EXTRA_SUBJECT,
+		prefs.getString("emailSubject","title"));
+	i.putExtra(Intent.EXTRA_TEXT,
+		getPhoneInformation() + getWifiInformation());
 	try {
 	    startActivity(Intent.createChooser(i, "send mail"));
 	} catch (android.content.ActivityNotFoundException ex) {
@@ -134,11 +168,6 @@ public class helloAndroid extends Activity
 	return str;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-	// getMenuInflater().inflate(R.menu.activity_main, menu);
-	return true;
-    }
     public native String stringFromJNI();
     static {
 	System.loadLibrary("my-jni");
