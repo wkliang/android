@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-<TextView  
-    android:id="@+id/helloTextView"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, helloAndroid"
-    />
-<Button
-    android:id="@+id/buttonHello"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello"
-/>
+    android:orientation="vertical" >
 
-<Button
-    android:id="@+id/buttonPhone"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Phone"
-/>
-<Button
-    android:id="@+id/buttonWifi"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Wifi"
-/>
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <TextView
+                android:id="@+id/helloTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Hello World, helloAndroid" />
+
+    </ScrollView>
+   
+
+    <Button
+        android:id="@+id/buttonHello"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello" />
+
 </LinearLayout>
-

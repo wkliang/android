@@ -1,5 +1,7 @@
 package com.github.wkliang.android.hello;
 
+import java.text.SimpleDateFormat;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.net.Uri;
@@ -11,6 +13,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +24,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
@@ -27,6 +33,7 @@ public class helloAndroid extends Activity
 {
     private static final String TAG = "helloAndroid";
     SharedPreferences prefs;
+    StringBuilder strBuilder;
 
     /** Called when the activity is first created. */
     @Override
@@ -34,8 +41,10 @@ public class helloAndroid extends Activity
     {
         super.onCreate(savedInstanceState);
 
-	prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	prefs.registerOnSharedPreferenceChangeListener(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        
+        strBuilder = new StringBuilder();
 
         setContentView(R.layout.main);
 
@@ -47,41 +56,29 @@ public class helloAndroid extends Activity
 	// tv.append(getWifiInformation() + "\n");
 	// setContentView(tv);
 
-	Button btn = (Button)findViewById(R.id.buttonHello);
-	btn.setOnClickListener(new View.OnClickListener() {
-	    public void onClick(View v) {
-		TextView tv = (TextView)findViewById(R.id.helloTextView);
-		tv.setTextSize(20);
-		tv.setText("你好，安桌椅！" + stringFromJNI() + "\n");
-	    }
-	});
+        Button btn = (Button)findViewById(R.id.buttonHello);
+        btn.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View v) {
+        		TextView tv = (TextView)findViewById(R.id.helloTextView);
+        		tv.setTextSize(16);
+        		strBuilder.append("你好，安桌椅！");
+        		strBuilder.append(stringFromJNI() + "\n");
+        		strBuilder.append(getPhoneInformation() + "\n");
+        		strBuilder.append(getWifiInformation() + "\n");
+        		getSmsInPhone(strBuilder);
+        		tv.setText(strBuilder.toString());
+        	}
+        });
 
-	btn = (Button)findViewById(R.id.buttonPhone);
-	btn.setOnClickListener(new View.OnClickListener() {
-	    public void onClick(View v) {
-		TextView tv = (TextView)findViewById(R.id.helloTextView);
-		tv.setTextSize(14);
-		tv.setText(getPhoneInformation() + "\n");
-	    }
-	});
-
-	btn = (Button)findViewById(R.id.buttonWifi);
-	btn.setOnClickListener(new View.OnClickListener() {
-	    public void onClick(View v) {
-		TextView tv = (TextView)findViewById(R.id.helloTextView);
-		tv.setTextSize(16);
-		tv.setText(getWifiInformation() + "\n");
-	    }
-	});
     }
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-	Log.d(TAG, "onSharedPreferenceChanged:"+key);
+    	Log.d(TAG, "onSharedPreferenceChanged:"+key);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-	// Inflate the menu; this adds item to the action bar if it is presents.
-	getMenuInflater().inflate(R.menu.main, menu);
-	return true;
+    	// Inflate the menu; this adds item to the action bar if it is presents.
+    	getMenuInflater().inflate(R.menu.main, menu);
+    	return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -108,10 +105,8 @@ public class helloAndroid extends Activity
 	i.setType("message/rfc822");
 	i.putExtra(Intent.EXTRA_EMAIL,
 		new String[] {prefs.getString("emailRecipient","nobody")});
-	i.putExtra(Intent.EXTRA_SUBJECT,
-		prefs.getString("emailSubject","title"));
-	i.putExtra(Intent.EXTRA_TEXT,
-		getPhoneInformation() + getWifiInformation());
+	i.putExtra(Intent.EXTRA_SUBJECT, prefs.getString("emailSubject","title"));
+	i.putExtra(Intent.EXTRA_TEXT, strBuilder.toString());
 	try {
 	    startActivity(Intent.createChooser(i, "send mail"));
 	} catch (android.content.ActivityNotFoundException ex) {
@@ -165,6 +160,42 @@ public class helloAndroid extends Activity
 	return str;
     }
 
+    // ref: http://blog.csdn.net/sunboy_2050/article/details/7328321
+    private void getSmsInPhone(StringBuilder sb) {
+    	final String SMS_URI = "content://sms/";
+    	try {
+    		Uri uri = Uri.parse(SMS_URI);
+    		String[] projection = new String[] {"_id", "address", "person", "body", "date", "type"};
+    		Cursor cur = getContentResolver().query(uri, projection, null, null, "date desc");
+    		if (!cur.moveToFirst()) {
+    			sb.append("no SMS content...\n\n");
+    		} else do {
+    			sb.append(new SimpleDateFormat("yyy-MM-dd hh:mm:ss ").format(
+						cur.getLong(cur.getColumnIndex("date"))));
+    			switch(cur.getInt(cur.getColumnIndex("type"))) {
+    			case 1 : 
+    				sb.append("rx<<");
+    				break;
+    			case 2 :
+    				sb.append("tx>>");
+    				break;
+    			default :
+    				sb.append("null:");
+    			};
+				sb.append(cur.getString(cur.getColumnIndex("address"))+",");
+    			sb.append(cur.getInt(cur.getColumnIndex("person"))+",");
+    			sb.append(cur.getString(cur.getColumnIndex("body"))+".\n");
+    		} while (cur.moveToNext());
+    		if (!cur.isClosed()) {
+    			cur.close();
+    			cur = null;
+    		}
+    		
+    	} catch (SQLiteException ex) {
+    		Log.d(TAG, ex.getMessage());
+    	}
+    }
+    
     public native String stringFromJNI();
     static {
 	System.loadLibrary("my-jni");
