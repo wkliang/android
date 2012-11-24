@@ -3,6 +3,7 @@ package com.github.wkliang.android.hello;
 import android.app.Activity;
 import android.os.Bundle;
 import android.net.Uri;
+import android.util.Log;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import android.preference.PreferenceManager;
 
@@ -21,7 +23,9 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 public class helloAndroid extends Activity
+	implements OnSharedPreferenceChangeListener
 {
+    private static final String TAG = "helloAndroid";
     SharedPreferences prefs;
 
     /** Called when the activity is first created. */
@@ -31,7 +35,7 @@ public class helloAndroid extends Activity
         super.onCreate(savedInstanceState);
 
 	prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	// prefs.registerOnSharedPreferenceChangeListener(this);
+	prefs.registerOnSharedPreferenceChangeListener(this);
 
         setContentView(R.layout.main);
 
@@ -69,17 +73,9 @@ public class helloAndroid extends Activity
 		tv.setText(getWifiInformation() + "\n");
 	    }
 	});
-
-	btn = (Button)findViewById(R.id.buttonIntent);
-	btn.setOnClickListener(new View.OnClickListener() {
-	    public void onClick(View v) {
-		// Uri uri = Uri.parse("http://www.google.com/");
-		// Intent i = new Intent(Intent.ACTION_VIEW,uri);
-		// startActivity(i);
-		sendEmail();
-	    }
-	});
-
+    }
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+	Log.d(TAG, "onSharedPreferenceChanged:"+key);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,6 +93,7 @@ public class helloAndroid extends Activity
 	    sendEmail();
 	    break;
 	case R.id.id_quit:
+	    Log.d(TAG, "-=-=-=-=- QUIT -=-=-=-=-");
 	    finish(); // end application ?
 	    break;
 	} 
