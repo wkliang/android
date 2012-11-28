@@ -5,12 +5,14 @@ import winterwell.jtwitter.TwitterException;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.app.Activity;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,14 +20,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-public class StatusActivity extends Activity 
-	implements OnClickListener, TextWatcher {
+public class StatusActivity extends Activity implements OnClickListener, TextWatcher {
 	private static final String TAG = "StatusActivity";
 	TextView textCount;
 	EditText editText;
 	Button updateButton;
-	Twitter twitter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,9 @@ public class StatusActivity extends Activity
 		
 		editText.addTextChangedListener(this);
 		
-		twitter = new Twitter("student", "password");
-		twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+		((YambaApplication)getApplication()).getTwitter();
+		
+		Log.i(TAG, "onCreated");
 	}
 
 	// Asynchronously posts to twitter
@@ -52,7 +56,8 @@ public class StatusActivity extends Activity
 		@Override
 		protected String doInBackground(String... statuses) {
 			try {
-				Twitter.Status status = twitter.updateStatus(statuses[0]);
+				Twitter.Status status = 
+						((YambaApplication)getApplication()).getTwitter().updateStatus(statuses[0]);
 				return status.text;
 			} catch (TwitterException e) {
 				Log.e(TAG, e.toString());
@@ -74,14 +79,15 @@ public class StatusActivity extends Activity
 			Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
 		}
 	}
-	
+
 	// Called when button is clicked
 	public void onClick(View v) {
+		Log.d(TAG, "onClicked");
+
 		String status = editText.getText().toString();
 		// Old Yamba's way
 		// twitter.setStatus(status);
 		new PostToTwitter().execute(status);
-		Log.d(TAG, "onClicked");
 	}
 	
 	private void setTextCount(int count) {
@@ -108,8 +114,41 @@ public class StatusActivity extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_status, menu);
+		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.itemPrefs:
+			startActivity(new Intent(this, PrefsActivity.class));
+			break;
+		case R.id.itemServiceStart:
+			startService(new Intent(this, UpdateService.class));
+			break;
+		case R.id.itemServiceStop:
+			stopService(new Intent(this, UpdateService.class));
+			break;
+		}
+		return true;
+		
+	}
+	
+/*
+ * http://stackoverflow.com/questions/2542938/sharedpreferences-onsharedpreferencechangelistener-not-being-called-consistently
+ * 
+ * SharedPreferences keeps listeners in a WeakHashMap. 
+ * This means that you cannot use an anonymous inner class as a listener, 
+ * as it will become the target of garbage collection as soon as
+ * you leave the current scope. 
+ *  
+ prefs.registerOnSharedPreferenceChangeListener(
+	new SharedPreferences.OnSharedPreferenceChangeListener() {
+		public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+			Log.d(TAG, "onSharedPreferenceChanged: " + key);
+		}
+	});
+*/
+	
 }
