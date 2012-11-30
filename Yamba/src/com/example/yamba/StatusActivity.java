@@ -56,8 +56,13 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		@Override
 		protected String doInBackground(String... statuses) {
 			try {
-				Twitter.Status status = 
-						((YambaApplication)getApplication()).getTwitter().updateStatus(statuses[0]);
+				Twitter twitter = ((YambaApplication)getApplication()).getTwitter();
+				if (twitter == null) {
+					final String tw_is_null = "Twitter connection info not initialized";
+					Log.d(TAG, tw_is_null);
+					return tw_is_null;
+				}
+				Twitter.Status status = twitter.updateStatus(statuses[0]);
 				return status.text;
 			} catch (TwitterException e) {
 				Log.e(TAG, e.toString());

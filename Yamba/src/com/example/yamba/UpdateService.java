@@ -18,11 +18,7 @@ public class UpdateService extends Service {
 	private boolean runFlag = false;
 	private Updater updater;
 	private YambaApplication yamba;
-	
-	// work with DBHelper;
-	DbHelper dbHelper;
-	SQLiteDatabase db;
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
@@ -41,7 +37,7 @@ public class UpdateService extends Service {
 		// Android Service class is a subclass of Context. DbHelper will figure out whether the
 		// database needs to be created or upgraded.
 
-		dbHelper = new DbHelper(this);
+		// dbHelper = new DbHelper(this);
 		
 		Log.d(TAG, this.hashCode() + ".onCreate");
 	}
@@ -78,8 +74,6 @@ public class UpdateService extends Service {
 	 * Thread that performs the actual update from the online service
 	 */
 	private class Updater extends Thread {
-		List<Twitter.Status> timeline;
-		
 		public Updater() {
 			super("UpdateService-updater");
 		}
@@ -90,43 +84,12 @@ public class UpdateService extends Service {
 			while (updateService.runFlag) {
 				Log.d(TAG, "updater running");
 				try {
-					// Get the timeline from the cloud
-					try {
-						timeline = yamba.getTwitter().getFriendsTimeline();
-					} catch(TwitterException e) {
-						Log.e(TAG, "Failed to connect to twitter service", e);
+					YambaApplication yamba = (YambaApplication)updateService.getApplication();
+					int newUpdates = yamba.fetchStatusUpdates();
+					if (newUpdates > 0) {
+						Log.d(TAG, "We have a new status");
 					}
-					
-					// Open the database for writing
-					db = dbHelper.getWritableDatabase();
-					
-					// Loop over the timeline and print it out				
-					ContentValues values = new ContentValues();
-					for (Twitter.Status status : timeline) {
-						// Insert into database
-						values.clear();
-						values.put(DbHelper.C_ID, status.id);
-						values.put(DbHelper.C_CREATED_AT, status.createdAt.getTime());
-						// SOURCE is unknown
-						values.put(DbHelper.C_SOURCE, status.source);
-						values.put(DbHelper.C_TEXT, status.text);
-						values.put(DbHelper.C_USER, status.user.name);
-						
-						try {
-							db.insertOrThrow(DbHelper.TABLE, null, values);
-							Log.d(TAG, String.format("%s: %s", status.user.name, status.text));
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					
-					// Close the database
-					db.close();
-					
-					Log.d(TAG, "updater ran");
 					Thread.sleep(DELAY);
-					
 				} catch(InterruptedException e) {
 					updateService.runFlag = false;
 				}
