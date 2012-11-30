@@ -5,7 +5,10 @@ import java.util.List;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -15,6 +18,10 @@ public class UpdateService extends Service {
 	private boolean runFlag = false;
 	private Updater updater;
 	private YambaApplication yamba;
+	
+	// work with DBHelper;
+	DbHelper dbHelper;
+	SQLiteDatabase db;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -28,6 +35,13 @@ public class UpdateService extends Service {
 		
 		this.yamba = (YambaApplication)getApplication();
 		this.updater = new Updater();
+	
+		// pg#127 --- What does it mean?
+		// Create the instance of DbHelper and pass this as its context. This works because the
+		// Android Service class is a subclass of Context. DbHelper will figure out whether the
+		// database needs to be created or upgraded.
+
+		dbHelper = new DbHelper(this);
 		
 		Log.d(TAG, this.hashCode() + ".onCreate");
 	}
@@ -36,11 +50,15 @@ public class UpdateService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		
-		this.runFlag = true;
-		this.updater.start();
-		this.yamba.setServiceRunning(true);
+		if (runFlag) {
+			Log.d(TAG, "already Started");
+		} else {
+			this.runFlag = true;
+			this.updater.start();
+			this.yamba.setServiceRunning(true);
 		
-		Log.d(TAG, "onStart");
+			Log.d(TAG, "onStarted");
+		}
 		return START_STICKY;
 	}
 	
@@ -53,7 +71,7 @@ public class UpdateService extends Service {
 		this.updater = null;
 		this.yamba.setServiceRunning(false);
 		
-		Log.d(TAG, "onDestroy");
+		Log.d(TAG, "onDestroyed");
 	}
 	
 	/**
@@ -78,10 +96,34 @@ public class UpdateService extends Service {
 					} catch(TwitterException e) {
 						Log.e(TAG, "Failed to connect to twitter service", e);
 					}
-					// Loop over the timeline and print it out
+					
+					// Open the database for writing
+					db = dbHelper.getWritableDatabase();
+					
+					// Loop over the timeline and print it out				
+					ContentValues values = new ContentValues();
 					for (Twitter.Status status : timeline) {
-						Log.d(TAG, String.format("%s: %s", status.user.name, status.text));
+						// Insert into database
+						values.clear();
+						values.put(DbHelper.C_ID, status.id);
+						values.put(DbHelper.C_CREATED_AT, status.createdAt.getTime());
+						// SOURCE is unknown
+						values.put(DbHelper.C_SOURCE, status.source);
+						values.put(DbHelper.C_TEXT, status.text);
+						values.put(DbHelper.C_USER, status.user.name);
+						
+						try {
+							db.insertOrThrow(DbHelper.TABLE, null, values);
+							Log.d(TAG, String.format("%s: %s", status.user.name, status.text));
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
+					
+					// Close the database
+					db.close();
+					
 					Log.d(TAG, "updater ran");
 					Thread.sleep(DELAY);
 					
@@ -90,7 +132,6 @@ public class UpdateService extends Service {
 				}
 			}
 		}
-		
-	}
+	} // Updater
 	 
 }
