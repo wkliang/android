@@ -135,6 +135,9 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		case R.id.itemServiceStop:
 			stopService(new Intent(this, UpdateService.class));
 			break;
+		case R.id.itemStatusViewer:
+			startActivity(new Intent(this, StatusViewer.class));
+			break;
 		}
 		return true;
 		

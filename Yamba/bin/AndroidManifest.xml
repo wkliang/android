@@ -30,6 +30,9 @@
 
         <activity android:name=".PrefsActivity"
             android:label="@string/titlePrefs" />
+        
+         <activity android:name=".StatusViewer"
+            android:label="StatusViewer" />
     
     </application>
 
