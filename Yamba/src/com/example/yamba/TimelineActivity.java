@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TimelineActivity extends BaseActivity {
 	static final String TAG = "StatusViewer";
@@ -32,21 +31,6 @@ public class TimelineActivity extends BaseActivity {
 		
 		// Find your views
 		listTimeline = (ListView)findViewById(R.id.listTimeline);
-		
-		// Connect to database
-/*
-		dbHelper = new SQLiteOpenHelper(this, "timeline.db", null, 1) {
-			@Override
-			public void onCreate(SQLiteDatabase db) {
-				Log.i(TAG, "dbHelper.onCreate");
-			}
-			@Override
-			public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-				Log.i(TAG, "dbHelper.onUpgrade");
-			}
-		};
-		db = dbHelper.getReadableDatabase();
-*/
 	}
 	
 	@Override
@@ -78,7 +62,6 @@ public class TimelineActivity extends BaseActivity {
 		super.onResume();
 	
 		// Get the data from the database
-		// cursor = db.query("timeline", null, null, null, null, null, "created_at desc");
 		cursor = yamba.getStatusData().getStatusUpdates();
 		startManagingCursor(cursor);
 		
