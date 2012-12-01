@@ -3,7 +3,6 @@ package com.example.yamba;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
 
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -12,10 +11,8 @@ import android.app.Application;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.SQLException;
 
-public class YambaApplication extends Application implements
-		OnSharedPreferenceChangeListener {
+public class YambaApplication extends Application implements OnSharedPreferenceChangeListener {
 	private static final String TAG = YambaApplication.class.getSimpleName();
 	private SharedPreferences prefs;
 	private boolean serviceRunning;
@@ -69,7 +66,7 @@ public class YambaApplication extends Application implements
 		Log.i(TAG, "onSharedPreferenceChanged: " + key);
 	}
 	
-	public boolean isServiceRinning() {
+	public boolean isServiceRunning() {
 		return this.serviceRunning;
 	}
 	

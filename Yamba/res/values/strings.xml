@@ -5,6 +5,10 @@
     <string name="titleStatus">Status Update</string>
     <string name="buttonUpdate">Update</string>
     <string name="hintText">Please enter your 140-character status</string>
+    <string name="titleServiceStart">tServiceStart</string>
+    <string name="titleServiceStop">tServiceStop</string>
+    <string name="titleTimeline">tTimeline</string>
+    <string name="titlePurge">tPurge</string>   
     <string name="titlePrefs">tPrefs</string>
     <string name="titleUsername">tUsername</string>
     <string name="titlePassword">tPassword</string>
@@ -12,9 +16,7 @@
     <string name="summaryUsername">Please enter your username</string>
     <string name="summaryPassword">Please enter your password</string>
     <string name="summaryApiRoot">URL of Root API for your service</string>
-    <string name="titleServiceStart">tServiceStart</string>
-    <string name="titleServiceStop">tServiceStop</string>
-    <string name="titleTimeline">Timeline</string>
+    <string name="msgSetupPrefs">Please setup account infomation first!</string>
     
 
 </resources>

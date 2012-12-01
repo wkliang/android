@@ -1,5 +1,6 @@
 package com.example.yamba;
 
+import winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,11 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends BaseActivity {
 	static final String TAG = "StatusViewer";
-	SQLiteOpenHelper dbHelper;
-	SQLiteDatabase db;
+	// SQLiteOpenHelper dbHelper;
+	// SQLiteDatabase db;
 	Cursor cursor;
 	ListView listTimeline;
 	SimpleCursorAdapter adapter;
@@ -32,6 +34,7 @@ public class TimelineActivity extends Activity {
 		listTimeline = (ListView)findViewById(R.id.listTimeline);
 		
 		// Connect to database
+/*
 		dbHelper = new SQLiteOpenHelper(this, "timeline.db", null, 1) {
 			@Override
 			public void onCreate(SQLiteDatabase db) {
@@ -43,12 +46,14 @@ public class TimelineActivity extends Activity {
 			}
 		};
 		db = dbHelper.getReadableDatabase();
+*/
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		db.close();
+		// db.close();
+		yamba.getStatusData().close();
 	}
 	
 	// View binder constant to inject business logic that converts a timestamp to
@@ -73,7 +78,8 @@ public class TimelineActivity extends Activity {
 		super.onResume();
 	
 		// Get the data from the database
-		cursor = db.query("timeline", null, null, null, null, null, "created_at desc");
+		// cursor = db.query("timeline", null, null, null, null, null, "created_at desc");
+		cursor = yamba.getStatusData().getStatusUpdates();
 		startManagingCursor(cursor);
 		
 		// Set up the adapter

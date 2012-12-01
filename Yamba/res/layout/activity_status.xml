@@ -42,5 +42,5 @@
         android:layout_height="wrap_content"
         android:text="@string/buttonUpdate"
         android:textSize="20sp" />
-
+    
 </LinearLayout>

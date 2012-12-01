@@ -2,17 +2,12 @@ package com.example.yamba;
 
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
-
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.app.Activity;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,11 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-
-public class StatusActivity extends Activity implements OnClickListener, TextWatcher {
+public class StatusActivity extends BaseActivity implements OnClickListener, TextWatcher {
 	private static final String TAG = "StatusActivity";
 	TextView textCount;
 	EditText editText;
@@ -115,7 +106,8 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 	
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 	}
-	
+
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -145,6 +137,7 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		return true;
 		
 	}
+*/
 	
 /*
  * http://stackoverflow.com/questions/2542938/sharedpreferences-onsharedpreferencechangelistener-not-being-called-consistently

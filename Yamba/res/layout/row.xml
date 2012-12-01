@@ -14,14 +14,16 @@
         	android:layout_weight="1"
         	android:id="@+id/textUser"   	
         	android:text="Slashdot"
-        	android:textStyle="bold"/>
+        	android:textStyle="bold"
+        	android:textColor="#FFFF"/>
 
 		<TextView
     	    android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:layout_gravity="right"
         	android:id="@+id/textCreatedAt"   	
-        	android:text="10 minutes ago"/>
+        	android:text="10 minutes ago"
+        	android:textColor="#FFFF"/>
 
     </LinearLayout>
     
@@ -29,6 +31,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textText"   	
-        android:text="Firefox comes to Android" />
+        android:text="Firefox comes to Android"
+        android:textColor="#FFFF" />
 
 </LinearLayout>
