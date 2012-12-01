@@ -33,6 +33,9 @@
         
          <activity android:name=".StatusViewer"
             android:label="StatusViewer" />
+         
+         <activity android:name=".TimelineActivity"
+            android:label="@string/titleTimeline" />
     
     </application>
 

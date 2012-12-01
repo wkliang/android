@@ -18,5 +18,9 @@
     <item
 		android:id="@+id/itemStatusViewer" 
         android:title="StatusViewer"></item>
+    
+    <item
+		android:id="@+id/itemTimeline" 
+        android:title="Timeline"></item>
 
 </menu>

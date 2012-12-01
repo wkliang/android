@@ -138,6 +138,9 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		case R.id.itemStatusViewer:
 			startActivity(new Intent(this, StatusViewer.class));
 			break;
+		case R.id.itemTimeline:
+			startActivity(new Intent(this, TimelineActivity.class));
+			break;			
 		}
 		return true;
 		

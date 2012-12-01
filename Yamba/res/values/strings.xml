@@ -14,6 +14,7 @@
     <string name="summaryApiRoot">URL of Root API for your service</string>
     <string name="titleServiceStart">tServiceStart</string>
     <string name="titleServiceStop">tServiceStop</string>
+    <string name="titleTimeline">Timeline</string>
     
 
 </resources>

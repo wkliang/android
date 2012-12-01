@@ -14,16 +14,10 @@
         android:textColor="#fff"
         android:textSize="30sp" />
 
-    <ScrollView
+    <ListView 
+        android:id="@+id/listTimeline"
+        android:layout_height="fill_parent" 
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-            <TextView
-                android:id="@+id/textTimeline"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#ffff"
-                android:textSize="15sp"
-                android:background="#6000" />
-    </ScrollView>
+        android:background="#6000" />
 
 </LinearLayout>
