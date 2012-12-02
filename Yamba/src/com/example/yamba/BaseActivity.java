@@ -6,9 +6,6 @@ import android.util.Log;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import android.content.Intent;
@@ -17,16 +14,10 @@ public class BaseActivity extends Activity {
 	private static final String TAG = "BaseActivity";
 	YambaApplication yamba;
 	
-	TextView textCount;
-	EditText editText;
-	Button updateButton;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		yamba = (YambaApplication)getApplication();
-		
-		Log.i(TAG, "onCreate");
 		
 		// Check if preferences have been set
 		Twitter twitter = yamba.getTwitter();
@@ -34,15 +25,9 @@ public class BaseActivity extends Activity {
 			startActivity(new Intent(this, PrefsActivity.class));
 			Toast.makeText(this, R.string.msgSetupPrefs, Toast.LENGTH_LONG).show();
 		}
-				
+		Log.i(TAG, "onCreated");			
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.i(TAG, "onResumed");
-	}
-	
+
 	// Called only once first time menu is clicked on
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,7 +41,8 @@ public class BaseActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.itemPrefs:
-			startActivity(new Intent(this, PrefsActivity.class));
+			startActivity(new Intent(this, PrefsActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 			break;
 		case R.id.itemToggleService:
 			if (yamba.isServiceRunning()) {
@@ -66,12 +52,17 @@ public class BaseActivity extends Activity {
 			}
 			break;
 		case R.id.itemPurge :
+			yamba.getStatusData().deleteTimeline();
+			Toast.makeText(this, R.string.msgAllDataPurged, Toast.LENGTH_LONG).show();
 			break;
 		case R.id.itemStatus :
-			startActivity(new Intent(this, StatusActivity.class));
+			startActivity(new Intent(this, StatusActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
 			break;
 		case R.id.itemTimeline :
-			startActivity(new Intent(this, TimelineActivity.class));
+			startActivity(new Intent(this, TimelineActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+				.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 			break;			
 		}
 		return true;

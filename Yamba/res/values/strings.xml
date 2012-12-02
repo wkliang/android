@@ -17,6 +17,8 @@
     <string name="summaryPassword">Please enter your password</string>
     <string name="summaryApiRoot">URL of Root API for your service</string>
     <string name="msgSetupPrefs">Please setup account infomation first!</string>
+    <string name="msgAllDataPurged">All data purged</string>
+    <string name="msgLastTimelineUpdate">Latest Timeline</string>
     
 
 </resources>

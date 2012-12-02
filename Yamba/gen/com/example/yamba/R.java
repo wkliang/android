@@ -17,15 +17,16 @@ public final class R {
     public static final class drawable {
         public static final int background=0x7f020000;
         public static final int ic_launcher=0x7f020001;
+        public static final int yamba_icon=0x7f020002;
     }
     public static final class id {
         public static final int buttonUpdate=0x7f090003;
         public static final int editText=0x7f090002;
-        public static final int itemPrefs=0x7f09000b;
-        public static final int itemPurge=0x7f09000c;
-        public static final int itemStatus=0x7f090009;
-        public static final int itemTimeline=0x7f09000a;
-        public static final int itemToggleService=0x7f09000d;
+        public static final int itemPrefs=0x7f09000c;
+        public static final int itemPurge=0x7f09000d;
+        public static final int itemStatus=0x7f09000a;
+        public static final int itemTimeline=0x7f09000b;
+        public static final int itemToggleService=0x7f09000e;
         public static final int listTimeline=0x7f090008;
         public static final int textCount=0x7f090001;
         public static final int textCreatedAt=0x7f090005;
@@ -33,12 +34,14 @@ public final class R {
         public static final int textTimeline=0x7f090007;
         public static final int textUser=0x7f090004;
         public static final int textView1=0x7f090000;
+        public static final int yamba_icon=0x7f090009;
     }
     public static final class layout {
         public static final int activity_status=0x7f030000;
         public static final int row=0x7f030001;
         public static final int status_viewer=0x7f030002;
         public static final int timeline=0x7f030003;
+        public static final int yamba_widget=0x7f030004;
     }
     public static final class menu {
         public static final int menu=0x7f080000;
@@ -47,6 +50,8 @@ public final class R {
         public static final int app_name=0x7f060000;
         public static final int buttonUpdate=0x7f060002;
         public static final int hintText=0x7f060003;
+        public static final int msgAllDataPurged=0x7f060010;
+        public static final int msgLastTimelineUpdate=0x7f060011;
         public static final int msgSetupPrefs=0x7f06000f;
         public static final int summaryApiRoot=0x7f06000e;
         public static final int summaryPassword=0x7f06000d;
@@ -91,5 +96,6 @@ public final class R {
     }
     public static final class xml {
         public static final int prefs=0x7f040000;
+        public static final int yamba_widget=0x7f040001;
     }
 }

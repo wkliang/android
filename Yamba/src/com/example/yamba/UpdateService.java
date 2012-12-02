@@ -7,6 +7,8 @@ import android.util.Log;
 
 public class UpdateService extends Service {
 	static final String TAG = UpdateService.class.getSimpleName();
+	public static final String NEW_STATUS_INTENT = "com.example.yamba.NEW_STATUS";
+	public static final String NEW_STATUS_INTENT_COUNT = "com.example.yamba.NEW_STATUS_COUNT";
 	static final int DELAY = 60000;	// a minute
 	private boolean runFlag = false;
 	private Updater updater;
@@ -36,7 +38,7 @@ public class UpdateService extends Service {
 	}
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public synchronized int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		
 		if (runFlag) {
@@ -74,13 +76,16 @@ public class UpdateService extends Service {
 		@Override
 		public void run() {
 			UpdateService updateService = UpdateService.this;
+			Log.d(TAG, "updater running");
 			while (updateService.runFlag) {
-				Log.d(TAG, "updater running");
 				try {
 					YambaApplication yamba = (YambaApplication)updateService.getApplication();
 					int newUpdates = yamba.fetchStatusUpdates();
 					if (newUpdates > 0) {
-						Log.d(TAG, "We have a new status");
+						Log.d(TAG, newUpdates + " new status received");
+						Intent intent = new Intent(NEW_STATUS_INTENT);
+						intent.putExtra(NEW_STATUS_INTENT_COUNT, newUpdates);
+						updateService.sendBroadcast(intent);
 					}
 					Thread.sleep(DELAY);
 				} catch(InterruptedException e) {

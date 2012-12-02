@@ -59,6 +59,10 @@ public class StatusData {
 	
 	private final DbHelper dbHelper;
 
+	public SQLiteOpenHelper getDbHelper() {
+		return dbHelper;
+	}
+	
 	public StatusData(Context context) {
 		this.dbHelper = new DbHelper(context);
 		Log.i(TAG, "Initialized data");
@@ -128,6 +132,15 @@ public class StatusData {
 			}
 		} finally {
 			db.close();
+		}
+	}
+	
+	public void deleteTimeline() {
+		Log.i(TAG, "msgAllDataPurged");
+		if (false) {
+			SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+			db.delete(TABLE, null, null);
+			db.close();	
 		}
 	}
 }
