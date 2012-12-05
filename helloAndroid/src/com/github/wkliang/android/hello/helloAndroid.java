@@ -1,9 +1,16 @@
 package com.github.wkliang.android.hello;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 
@@ -24,15 +31,17 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
-import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 public class helloAndroid extends Activity
-	implements OnSharedPreferenceChangeListener
+	implements OnSharedPreferenceChangeListener, LocationListener
 {
     private static final String TAG = "helloAndroid";
     SharedPreferences prefs;
+    LocationManager locationManager;
+    Geocoder geocoder;
+    Location lastLocation;
     StringBuilder strBuilder;
 
     /** Called when the activity is first created. */
@@ -42,11 +51,17 @@ public class helloAndroid extends Activity
         super.onCreate(savedInstanceState);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
-        
-        strBuilder = new StringBuilder();
+        prefs.registerOnSharedPreferenceChangeListener(this);     
 
         setContentView(R.layout.main);
+        
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        geocoder = new Geocoder(this);
+        
+        // Initialize with the last known location
+        lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        onLocationChanged(lastLocation);
+
 
 	// TextView tv = new TextView(this);
 	// TextView tv = (TextView)findViewById(R.id.helloTextView);
@@ -61,15 +76,16 @@ public class helloAndroid extends Activity
         	public void onClick(View v) {
         		TextView tv = (TextView)findViewById(R.id.helloTextView);
         		tv.setTextSize(16);
+                strBuilder = new StringBuilder();
         		strBuilder.append("你好，安桌椅！");
         		strBuilder.append(stringFromJNI() + "\n");
         		strBuilder.append(getPhoneInformation() + "\n");
         		strBuilder.append(getWifiInformation() + "\n");
         		getSmsInPhone(strBuilder);
+        		getLocation(strBuilder, lastLocation);
         		tv.setText(strBuilder.toString());
         	}
         });
-
     }
     
     @Override
@@ -79,14 +95,69 @@ public class helloAndroid extends Activity
     }
     
     @Override
+    protected void onPause() {
+    	super.onPause();
+    	locationManager.removeUpdates(this);
+    }
+    
+    @Override
     protected void onResume() {
-    	super.onResume();
+    	super.onRestart();
+    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
     	Log.i(TAG, "RESUME");
     }
+    
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+	}
+
+    // Called when location has changed
+    public void onLocationChanged(Location location) {
+    	if (location == null) {
+    		Log.d(TAG, "onLocationChanged is null");
+    	} else {
+    		Log.d(TAG, "onLocationChanged:" + location.toString());
+    		lastLocation = location;
+    	}
+    }
+    
+    private void getLocation(StringBuilder sb, Location loc) {
+    	if (loc == null) {
+    		Log.d(TAG, "loc is null");
+    		return ;
+    	}
+    	sb.append(String.format("Lat:%f\nLong:%f\nAlt:%f\nBearing:%f\n", 
+    			loc.getLatitude(), 
+    			loc.getLongitude(), 
+    			loc.getAltitude(), 
+    			loc.getBearing()));
+    	// Perform geocidng for this location
+    	try {
+    		List<Address> addresses = geocoder.getFromLocation(
+    				loc.getLatitude(), loc.getLongitude(), 10);
+    		for (Address addr: addresses) {
+    			sb.append(addr.getAddressLine(0)+"\n");
+    		}
+    	} catch (IOException e) {
+    	}
+    }
+
     
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
     	Log.d(TAG, "onSharedPreferenceChanged:"+key);
     }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	// Inflate the menu; this adds item to the action bar if it is presents.
@@ -208,7 +279,7 @@ public class helloAndroid extends Activity
     		Log.d(TAG, ex.getMessage());
     	}
     }
-    
+	
     public native String stringFromJNI();
     static {
     	System.loadLibrary("my-jni");

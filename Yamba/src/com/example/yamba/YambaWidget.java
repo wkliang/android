@@ -17,40 +17,28 @@ public class YambaWidget extends AppWidgetProvider {
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		CharSequence user = "user";
+		CharSequence createdAt = "createAt";
+		CharSequence message = "message";
 		Cursor c = context.getContentResolver().query(StatusProvider.CONTENT_URI, null, null, null, null);
 		try {
 			Log.d(TAG, "return:" + c.getCount());
-			if (!c.moveToFirst()) {
-				Log.d(TAG, "No data to update");
-				for (int appWidgetId: appWidgetIds) {
-					RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.yamba_widget);
-				 	views.setTextViewText(R.id.textUser, "user");
-				 	views.setTextViewText(R.id.textCreatedAt, "createdAt");
-				 	views.setTextViewText(R.id.textText, "message");
-				 	views.setOnClickPendingIntent(R.id.yamba_icon, 
-						PendingIntent.getActivity(context, 0, 
-								new Intent(context, TimelineActivity.class), 0));
-				 	appWidgetManager.updateAppWidget(appWidgetId, views);
-				}
-			} else {
-				CharSequence user = c.getString(c.getColumnIndex(StatusData.C_USER));
-				CharSequence createdAt = DateUtils.getRelativeTimeSpanString(context, 
+			if (c.moveToFirst()) {
+				user = c.getString(c.getColumnIndex(StatusData.C_USER));
+				createdAt = DateUtils.getRelativeTimeSpanString(context, 
 						c.getLong(c.getColumnIndex(StatusData.C_CREATED_AT)));
-				CharSequence message = c.getString(c.getColumnIndex(StatusData.C_TEXT));
-				// Loop through all instance of this widget
-				for (int appWidgetId: appWidgetIds) {
-					Log.d(TAG, "Updating widget" + appWidgetId);
-					RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.yamba_widget);
-					views.setTextViewText(R.id.textUser, user);
-					views.setTextViewText(R.id.textCreatedAt, createdAt);
-					views.setTextViewText(R.id.textText, message);
-					views.setOnClickPendingIntent(R.id.yamba_icon, 
-							PendingIntent.getActivity(context, 0, 
-									new Intent(context, TimelineActivity.class), 0));
-					appWidgetManager.updateAppWidget(appWidgetId, views);
-				}
-				
-				
+				message = c.getString(c.getColumnIndex(StatusData.C_TEXT));
+			}
+			// Loop through all instance of this widget
+			for (int appWidgetId: appWidgetIds) {
+				RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.yamba_widget);
+			 	views.setTextViewText(R.id.textUser, user);
+			 	views.setTextViewText(R.id.textCreatedAt, createdAt);
+			 	views.setTextViewText(R.id.textText, message);
+			 	views.setOnClickPendingIntent(R.id.yamba_icon, 
+					PendingIntent.getActivity(context, 0, 
+							new Intent(context, TimelineActivity.class), 0));
+			 	appWidgetManager.updateAppWidget(appWidgetId, views);
 			}
     	} catch (SQLiteException ex) {
     		Log.d(TAG, ex.getMessage());

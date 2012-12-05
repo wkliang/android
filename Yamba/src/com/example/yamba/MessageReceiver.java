@@ -13,20 +13,19 @@ public class MessageReceiver extends BroadcastReceiver {
 	// static final String NetworkReceiver = "android.net.conn.CONNECTIVITY_CHANGE";
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
-		logMsg(context, intent.getAction());
+		Log.d(TAG, intent.getAction());
 		
 		ConnectivityManager cm = 
 			(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ani = cm.getActiveNetworkInfo();
 		if (ani != null) {
-			logMsg(context, "ActiveNetwork:" + ani.getTypeName());
 			context.startService(new Intent(context, UpdateService.class));
+			logMsg(context, "ActiveNetwork:" + ani.getTypeName());
 		}
 		else if (intent.getAction().equals(cm.CONNECTIVITY_ACTION) &&
 				intent.getBooleanExtra(cm.EXTRA_NO_CONNECTIVITY, false)) {
-			logMsg(context, "stopService");
 			context.stopService(new Intent(context, UpdateService.class));
+			logMsg(context, "Yamba stopService");
 		} 
 	}
 	
