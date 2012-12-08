@@ -18,6 +18,7 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 	private boolean serviceRunning;
 	private StatusData statusData;
 	public Twitter twitter;
+	public static final String LOCATION_PROVIDER_NONE = "NONE";
 
 	@Override
 	public void onCreate() {
@@ -34,6 +35,10 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 		super.onTerminate();
 		statusData.close();
 		Log.i(TAG, "onTerminated");
+	}
+
+	public String getProvider() {
+		return this.prefs.getString("provider", LOCATION_PROVIDER_NONE);
 	}
 	
 	public synchronized Twitter getTwitter() {

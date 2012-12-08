@@ -13,12 +13,36 @@
     <string name="titleUsername">tUsername</string>
     <string name="titlePassword">tPassword</string>
     <string name="titleApiRoot">tApiRoot</string>
+    <string name="titleProvider">tProvider</string>
+    <string name="titleUpdaterInterval">tUpdaterInterval</string>
     <string name="summaryUsername">Please enter your username</string>
     <string name="summaryPassword">Please enter your password</string>
     <string name="summaryApiRoot">URL of Root API for your service</string>
-    <string name="msgSetupPrefs">Please setup account infomation first!</string>
+    <string name="summaryProvider">summary provider</string>
+    <string name="summaryUpdaterInterval">summary updater\'s Interval</string>
+    <string name="msgSetupPrefs">Please setup account information first!</string>
     <string name="msgAllDataPurged">All data purged</string>
     <string name="msgLastTimelineUpdate">Latest Timeline</string>
     
+    <string-array name="providers">
+        <item>None, please</item>
+        <item>GPS via satellites!</item>
+        <item>Mobile Network will do</item>
+    </string-array>
+    <string-array name="providerValues">
+        <item>NONE</item>
+        <item>gps</item>
+        <item>network</item>
+    </string-array>
+    <string-array name="interval">
+        <item >1</item>
+        <item >3</item>
+        <item >5</item>
+    </string-array>
+    <string-array name="intervalValues">
+        <item >one</item>
+        <item >three</item>
+        <item >five</item>
+    </string-array>
 
 </resources>

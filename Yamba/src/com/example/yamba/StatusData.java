@@ -79,7 +79,10 @@ public class StatusData {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
 			// db.insertOrThrow(TABLE, null, values);
-			db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+			// Yamba service seems bound _id to MAX:1024
+			// change CONFLICT_IGNORE with CONFLICT_REPLACE to work around
+			db.insertWithOnConflict(TABLE, null, values,
+					SQLiteDatabase.CONFLICT_REPLACE); 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

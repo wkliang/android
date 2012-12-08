@@ -1,6 +1,27 @@
-
-    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-        <EditTextPreference android:summary="@string/summaryUsername" android:title="@string/titleUsername" android:key="username"/>
-        <EditTextPreference android:summary="@string/summaryPassword" android:title="@string/titlePassword" android:key="password" android:password="true"/>
-        <EditTextPreference android:summary="@string/summaryApiRoot" android:title="@string/titleApiRoot" android:key="apiRoot"/>
+<?xml version="1.0" encoding="utf-8"?>
+	<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <EditTextPreference
+			android:title="@string/titleUsername"
+			android:summary="@string/summaryUsername"
+			android:key="username"/>
+        <EditTextPreference
+			android:title="@string/titlePassword"
+            android:summary="@string/summaryPassword"
+            android:key="password" android:password="true"/>
+        <EditTextPreference
+            android:title="@string/titleApiRoot"
+            android:summary="@string/summaryApiRoot"
+            android:key="apiRoot"/>
+        <ListPreference 
+            android:title="@string/titleProvider"
+            android:summary="@string/summaryProvider"
+            android:key="provider"
+            android:entries="@array/providers"
+            android:entryValues="@array/providerValues"/>
+        <ListPreference 
+            android:title="@string/titleUpdaterInterval"
+            android:summary="@string/summaryUpdaterInterval"
+            android:key="interval"
+            android:entries="@array/interval"
+            android:entryValues="@array/intervalValues"/>
     </PreferenceScreen>

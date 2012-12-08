@@ -87,11 +87,14 @@ public class UpdateService extends Service {
 						intent.putExtra(NEW_STATUS_INTENT_COUNT, newUpdates);
 						updateService.sendBroadcast(intent);
 					}
+					Log.d(TAG, "gonna sleep " + DELAY);
 					Thread.sleep(DELAY);
 				} catch(InterruptedException e) {
+					Log.e(TAG, "exception");
 					updateService.runFlag = false;
 				}
 			}
+			Log.d(TAG, "updater exit");
 		}
 	} // Updater
 	 

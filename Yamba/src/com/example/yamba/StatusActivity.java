@@ -3,6 +3,9 @@ package com.example.yamba;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,11 +18,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StatusActivity extends BaseActivity implements OnClickListener, TextWatcher {
+public class StatusActivity extends BaseActivity 
+	implements OnClickListener, TextWatcher, LocationListener {
 	private static final String TAG = "StatusActivity";
+	private static final long LOCATION_MIN_TIME = 3600000; // One hour
+	private static final float LOCATION_MIN_DISTANCE = 1000; // One kilometer
 	TextView textCount;
 	EditText editText;
 	Button updateButton;
+	LocationManager locationManager;
+	Location location;
+	String provider;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,42 @@ public class StatusActivity extends BaseActivity implements OnClickListener, Tex
 		
 		Log.i(TAG, "onCreated");
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		Log.d(TAG, "onResume");
+		// Setup location information
+		try {
+		provider = yamba.getProvider();
+		if (!YambaApplication.LOCATION_PROVIDER_NONE.equals(provider)) {
+			Log.d(TAG, "b4 getSystemService(LOCATION_SERVICE)");
+			locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+		}
+		if (locationManager != null) {
+			Log.d(TAG, "b4 getLastKnownLocation");
+			location = locationManager.getLastKnownLocation(provider);
+			Log.d(TAG, "b4 requestLocationUpdates");
+			locationManager.requestLocationUpdates(provider,
+					LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, this);
+		} else {
+			Log.d(TAG, "loc is null");
+		}
+		} finally {
+			Log.d(TAG, "finally");
+		}
+		
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		if (locationManager != null) {
+			locationManager.removeUpdates(this);
+		}
+	}
 
 	// Asynchronously posts to twitter
 	class PostToTwitter extends AsyncTask<String, Integer, String> {
@@ -52,6 +97,13 @@ public class StatusActivity extends BaseActivity implements OnClickListener, Tex
 					final String tw_is_null = "Twitter connection info not initialized";
 					Log.d(TAG, tw_is_null);
 					return tw_is_null;
+				}
+				if (location == null) {
+					Log.d(TAG, "PostToTwitter loc is null");
+				} else {
+					double latlong[] = {location.getLatitude(), location.getLongitude()};
+					Log.d(TAG, "lat:" + latlong[0] + ", long:" + latlong[1] + ".");
+					twitter.setMyLocation(latlong);
 				}
 				Twitter.Status status = twitter.updateStatus(statuses[0]);
 				return status.text;
@@ -105,6 +157,34 @@ public class StatusActivity extends BaseActivity implements OnClickListener, Tex
 	}
 	
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		Log.d(TAG, "onLocationChanged");
+		this.location = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		Log.d(TAG, "onProviderDisabled");
+		if (this.provider.equals(provider)) {
+			locationManager.removeUpdates(this);
+		}
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		Log.d(TAG, "onProviderEnabled");
+		if (this.provider.equals(provider)) {
+			locationManager.requestLocationUpdates(provider,
+					LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, this);
+		}
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		Log.d(TAG, "onStatusChanged");
 	}
 
 /*
