@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TimelineActivity extends BaseActivity {
-	static final String TAG = "StatusViewer";
+	static final String TAG = "TimelineActivity";
 	// SQLiteOpenHelper dbHelper;
 	// SQLiteDatabase db;
 	Cursor cursor;
@@ -80,6 +80,7 @@ public class TimelineActivity extends BaseActivity {
 	
 	@Override
 	protected void onResume() {
+		Log.d(TAG, "onResume()");
 		super.onResume();
 	
 		this.setupList();
@@ -90,6 +91,7 @@ public class TimelineActivity extends BaseActivity {
 	
 	@Override
 	protected void onPause() {
+		Log.d(TAG, "onPause()");
 		super.onPause();
 		
 		// Unregister the receiver

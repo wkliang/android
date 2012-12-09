@@ -14,7 +14,7 @@
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, __FILE__, __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, __FILE__, __VA_ARGS__))
 
-jstring Java_com_github_wkliang_android_hello_helloAndroid_stringFromJNI(
+jstring Java_com_example_android_hello_helloAndroid_stringFromJNI(
 	JNIEnv*env, jobject thiz)
 {
 	LOGI("%d: stringFromJNI()", __LINE__);

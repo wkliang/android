@@ -1,4 +1,4 @@
-package com.github.wkliang.android.hello;
+package com.example.android.hello;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

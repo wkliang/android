@@ -20,9 +20,12 @@
     <string name="summaryApiRoot">URL of Root API for your service</string>
     <string name="summaryProvider">summary provider</string>
     <string name="summaryUpdaterInterval">summary updater\'s Interval</string>
+    
     <string name="msgSetupPrefs">Please setup account information first!</string>
     <string name="msgAllDataPurged">All data purged</string>
     <string name="msgLastTimelineUpdate">Latest Timeline</string>
+    <string name="msgNotificationTitle">New Yamba Status Updates</string>
+    <string name="msgNotificationMessage">You\ve got %d new status update(s)</string>
     
     <string-array name="providers">
         <item>None, please</item>
@@ -35,14 +38,20 @@
         <item>network</item>
     </string-array>
     <string-array name="interval">
-        <item >1</item>
-        <item >3</item>
-        <item >5</item>
+        <item>Never</item>
+        <item>Five minutes</item>
+        <item>Fifteen minutes</item>
+        <item>An hour</item>
+        <item>Half day</item>
+        <item>A Day</item>
     </string-array>
     <string-array name="intervalValues">
-        <item >one</item>
-        <item >three</item>
-        <item >five</item>
+        <item>o</item>
+        <item>300000</item>
+        <item>900000</item>
+        <item>3600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
     </string-array>
 
 </resources>
